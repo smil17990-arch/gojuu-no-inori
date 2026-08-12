@@ -1,0 +1,742 @@
+/* =========================================================
+   五重の祈｜安除守浄祈
+   墨染和紙・古金・朱印をイメージした静謐なUI
+   ========================================================= */
+
+:root {
+  --bg-1: #0b0b0b;
+  --bg-2: #11100e;
+  --bg-3: #17140f;
+
+  --ink: #e8dfc8;
+  --ink-dim: rgba(232, 223, 200, 0.46);
+  --ink-faint: rgba(232, 223, 200, 0.22);
+
+  --gold: #b89a55;
+  --gold-bright: #c8aa63;
+  --gold-glow: rgba(200, 170, 99, 0.55);
+
+  --vermilion: #8f2f28;
+  --vermilion-bright: #a23a30;
+
+  --serif-jp: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --serif-en: 'Cormorant Garamond', 'EB Garamond', serif;
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  background: var(--bg-1);
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--serif-jp);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.02em;
+  line-height: 1.9;
+}
+
+/* ---------- 背景テクスチャ：和紙・墨・霞 ---------- */
+body {
+  background-color: var(--bg-1);
+  background-image:
+    radial-gradient(circle at 50% 18%, rgba(184, 154, 85, 0.05), transparent 60%),
+    radial-gradient(circle at 50% 50%, var(--bg-3) 0%, var(--bg-2) 45%, var(--bg-1) 100%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(232, 223, 200, 0.012) 0px, rgba(232, 223, 200, 0.012) 1px, transparent 2px, transparent 4px);
+  background-blend-mode: screen, normal, overlay;
+}
+
+body::before {
+  /* 極細の繊維ノイズ */
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(115deg, rgba(232,223,200,0.5) 0px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(25deg, rgba(232,223,200,0.35) 0px, transparent 1px, transparent 5px);
+  mix-blend-mode: overlay;
+}
+
+/* ---------- 全体シェル ---------- */
+.app-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- ヘッダー ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px 10px;
+}
+
+.home-icon {
+  background: none;
+  border: none;
+  color: var(--gold);
+  opacity: 0.75;
+  padding: 6px;
+  margin: -6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  transition: opacity 0.4s ease;
+}
+.home-icon:hover, .home-icon:focus-visible { opacity: 1; }
+
+.app-header-title {
+  font-family: var(--serif-jp);
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  color: var(--ink-dim);
+  padding-left: 2px;
+}
+
+/* ---------- 画面切り替え ---------- */
+.screens {
+  flex: 1;
+  position: relative;
+}
+
+.screen {
+  display: none;
+  min-height: calc(100vh - 150px);
+  padding-bottom: 40px;
+  animation: screen-fade 0.9s ease;
+}
+.screen.active { display: block; }
+
+@keyframes screen-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 共通：見出し類 ---------- */
+.screen-caption {
+  text-align: center;
+  font-family: var(--serif-en);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  opacity: 0.7;
+  margin: 8px 0 26px;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   1｜トップ画面
+   ========================================================= */
+.home-inner {
+  padding: 18px 26px 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrow {
+  font-family: var(--serif-en);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  color: var(--gold);
+  opacity: 0.7;
+  margin: 22px 0 4px;
+}
+
+.home-title {
+  font-family: var(--serif-jp);
+  font-weight: 500;
+  font-size: 40px;
+  letter-spacing: 0.16em;
+  margin: 6px 0 6px;
+  color: var(--ink);
+  text-shadow: 0 0 24px rgba(200,170,99,0.18);
+}
+
+.home-sub {
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--ink-dim);
+  margin: 0 0 30px;
+}
+
+.home-glyphs {
+  font-size: 22px;
+  letter-spacing: 0.5em;
+  color: var(--gold-bright);
+  margin: 0 0 34px;
+  padding-left: 0.5em; /* letter-spacingの右余白補正 */
+}
+
+.home-motto {
+  font-size: 17px;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  margin: 0 0 40px;
+  position: relative;
+  padding: 18px 0;
+}
+.home-motto::before, .home-motto::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 22px;
+  background: linear-gradient(var(--gold), transparent);
+  margin: 0 auto 14px;
+  opacity: 0.5;
+}
+.home-motto::after {
+  background: linear-gradient(transparent, var(--gold));
+  margin: 14px auto 0;
+}
+
+/* ミニ護符プレビュー（実写・非インタラクティブ） */
+.mini-fu {
+  width: 168px;
+  height: 168px;
+  margin: 0 auto 40px;
+  border: 1px solid rgba(184,154,85,0.4);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.7),
+    0 14px 34px rgba(0,0,0,0.55),
+    0 0 26px rgba(200,170,99,0.12);
+  overflow: hidden;
+  position: relative;
+}
+.mini-fu::after {
+  /* 縁を静かに墨へ溶かすビネット */
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 26px 10px rgba(0,0,0,0.65);
+  pointer-events: none;
+}
+.mini-fu img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) brightness(0.98);
+}
+
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 46px;
+}
+
+.btn-primary {
+  font-family: var(--serif-jp);
+  font-size: 15px;
+  letter-spacing: 0.24em;
+  color: var(--bg-1);
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  border: none;
+  padding: 15px 10px;
+  min-height: 48px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(184,154,85,0.18);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+}
+.btn-primary:hover, .btn-primary:focus-visible { filter: brightness(1.08); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary.small {
+  padding: 11px 18px;
+  font-size: 13px;
+  min-height: 42px;
+  width: auto;
+}
+
+.btn-ghost {
+  font-family: var(--serif-jp);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid rgba(232,223,200,0.22);
+  padding: 13px 10px;
+  min-height: 46px;
+  cursor: pointer;
+  transition: color 0.4s ease, border-color 0.4s ease;
+}
+.btn-ghost:hover, .btn-ghost:focus-visible {
+  color: var(--gold-bright);
+  border-color: rgba(184,154,85,0.5);
+}
+
+.btn-text-tiny {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  font-family: var(--serif-jp);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  padding: 10px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  min-height: 40px;
+}
+.btn-text-tiny:hover, .btn-text-tiny:focus-visible { color: var(--vermilion-bright); }
+
+.credit {
+  margin-top: 10px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(232,223,200,0.1);
+  width: 100%;
+  max-width: 280px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+}
+.credit p { margin: 2px 0; }
+.credit-en { font-family: var(--serif-en); font-style: italic; letter-spacing: 0.08em; }
+.credit-link a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(184,154,85,0.4);
+}
+.credit-link a:hover, .credit-link a:focus-visible { color: var(--gold-bright); }
+
+/* =========================================================
+   2｜護符画面
+   ========================================================= */
+.fu-inner {
+  padding: 4px 20px 20px;
+  position: relative;
+}
+
+.fu-inner::before {
+  /* 実写の黒染和紙テクスチャをごく薄く重ねる */
+  content: "";
+  position: absolute;
+  inset: -8px -20px 0;
+  height: 340px;
+  background-image: url("images/paper-texture.jpg");
+  background-repeat: repeat;
+  background-size: 420px auto;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: linear-gradient(to bottom, black, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.fu-inner > * {
+  position: relative;
+  z-index: 1;
+}
+
+.fu-talisman-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 26px;
+}
+
+.fu-talisman {
+  width: 90vw;
+  max-width: 380px;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(184,154,85,0.05), transparent 65%),
+    linear-gradient(155deg, #14120d, #0a0906 70%);
+  border: 1px solid var(--vermilion);
+  outline: 1px solid rgba(184,154,85,0.4);
+  outline-offset: -6px;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.6),
+    0 18px 50px rgba(0,0,0,0.55),
+    inset 0 0 60px rgba(0,0,0,0.5);
+  position: relative;
+  transition: box-shadow 1.4s ease;
+}
+
+.fu-talisman.grid-complete {
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.6),
+    0 0 46px rgba(200,170,99,0.35),
+    inset 0 0 60px rgba(0,0,0,0.4);
+}
+
+.fu-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(16px, 4.6vw, 20px);
+  color: var(--ink-faint);
+  border: 1px solid rgba(232,223,200,0.05);
+  background: none;
+  cursor: default;
+  font-family: var(--serif-jp);
+  transition: color 1s ease, text-shadow 1s ease, opacity 1s ease;
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.fu-cell.dim { color: rgba(232,223,200,0.16); }
+
+.fu-cell.active-target {
+  color: var(--gold-bright);
+  cursor: pointer;
+  animation: breathe 2.6s ease-in-out infinite;
+}
+.fu-cell.active-target:focus-visible {
+  outline: 1px solid var(--gold-bright);
+  outline-offset: -2px;
+}
+
+.fu-cell.visited {
+  color: var(--ink);
+  text-shadow: 0 0 10px rgba(200,170,99,0.28);
+}
+
+.fu-cell.center-cell { color: var(--gold-bright); }
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.75; text-shadow: 0 0 6px rgba(200,170,99,0.25); }
+  50%      { opacity: 1;    text-shadow: 0 0 16px rgba(200,170,99,0.55); }
+}
+
+/* ---------- 説明パネル ---------- */
+.fu-panel {
+  min-height: 132px;
+  text-align: center;
+  padding: 4px 6px;
+  animation: panel-in 0.8s ease;
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fu-panel-hint {
+  color: var(--ink-dim);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  margin-top: 30px;
+}
+
+.fu-panel-heading {
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  color: var(--gold-bright);
+  margin: 6px 0 2px;
+}
+
+.fu-panel-sub {
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  margin: 0 0 18px;
+}
+
+.fu-panel-text p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 2.05;
+  color: var(--ink);
+}
+
+/* ---------- 完成演出 ---------- */
+.fu-completion {
+  text-align: center;
+  padding-top: 10px;
+  animation: panel-in 1.4s ease;
+}
+
+.fu-chain {
+  font-size: 17px;
+  letter-spacing: 0.14em;
+  color: var(--gold-bright);
+  margin: 20px 0 14px;
+  text-shadow: 0 0 14px rgba(200,170,99,0.3);
+}
+
+.fu-complete-line {
+  font-size: 15px;
+  color: var(--ink);
+  letter-spacing: 0.12em;
+  margin-bottom: 34px;
+}
+
+.fu-record {
+  border-top: 1px solid rgba(232,223,200,0.1);
+  padding-top: 26px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.fu-record label {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 14px;
+  letter-spacing: 0.08em;
+}
+
+.fu-record-label {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  opacity: 0.75;
+  margin: 0 0 12px;
+}
+
+.fu-record textarea {
+  width: 100%;
+  background: rgba(232,223,200,0.03);
+  border: 1px solid rgba(184,154,85,0.3);
+  color: var(--ink);
+  font-family: var(--serif-jp);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 90px;
+}
+.fu-record textarea:focus-visible {
+  outline: none;
+  border-color: var(--gold-bright);
+}
+.fu-record textarea::placeholder { color: rgba(232,223,200,0.28); }
+
+.fu-record-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  justify-content: center;
+}
+
+.fu-record-saved {
+  font-size: 12px;
+  color: var(--gold-bright);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.fu-record-saved.show { opacity: 1; }
+
+.fu-record > .btn-text-tiny {
+  display: block;
+  margin: 8px auto 0;
+}
+
+/* =========================================================
+   5｜物語画面
+   ========================================================= */
+.story-inner {
+  padding: 0 0 30px;
+}
+
+.story-banner {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(184,154,85,0.25);
+  position: relative;
+}
+.story-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11,11,11,0) 55%, var(--bg-1) 100%);
+}
+.story-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.9) brightness(0.92);
+}
+
+.story-inner .story-title,
+.story-inner .story-subtitle,
+.story-inner .story-body,
+.story-inner .screen-caption {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.story-title {
+  text-align: center;
+  font-size: 26px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.story-subtitle {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  margin: 0 0 40px;
+}
+
+.story-body p {
+  font-size: 15px;
+  line-height: 2.3;
+  color: var(--ink);
+  margin: 0 0 22px;
+  letter-spacing: 0.04em;
+}
+
+.story-emphasis {
+  color: var(--gold-bright);
+  font-size: 19px;
+  letter-spacing: 0.3em;
+  text-align: center;
+  margin: 30px 0 !important;
+}
+
+/* =========================================================
+   6｜解説画面
+   ========================================================= */
+.explain-inner {
+  padding: 4px 26px 30px;
+}
+
+.explain-title {
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  margin: 0 0 30px;
+  font-weight: 500;
+}
+
+.explain-text {
+  font-size: 14.5px;
+  line-height: 2.1;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.explain-list {
+  list-style: none;
+  margin: 34px 0 0;
+  padding: 0;
+  border-top: 1px solid rgba(232,223,200,0.1);
+}
+
+.explain-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 16px 4px;
+  border-bottom: 1px solid rgba(232,223,200,0.1);
+}
+
+.explain-list-main {
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: var(--gold-bright);
+}
+
+.explain-list-sub {
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+}
+
+/* =========================================================
+   下部ナビゲーション
+   ========================================================= */
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 14px 10px calc(14px + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(11,11,11,0), var(--bg-1) 30%);
+  border-top: 1px solid rgba(232,223,200,0.08);
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  font-family: var(--serif-jp);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  padding: 8px 4px;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.4s ease;
+}
+
+.nav-btn.active { color: var(--gold-bright); }
+.nav-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 1px;
+  background: var(--gold-bright);
+}
+
+/* =========================================================
+   縮小画面（幅360px前後）微調整
+   ========================================================= */
+@media (max-width: 380px) {
+  .home-title { font-size: 34px; }
+  .home-glyphs { font-size: 19px; letter-spacing: 0.42em; }
+  .bottom-nav { gap: 26px; }
+}
+
+/* =========================================================
+   モーション低減設定への配慮
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
